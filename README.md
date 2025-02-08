@@ -15,7 +15,7 @@
    - The `-t f1tenth_foxy` **tags** the image for easy reference.
 
 
-## ** Step 2: Run the Docker Container**
+##  Step 2: Run the Docker Container
 ### **With Ethernet (LiDAR) & Serial (VESC) Support**
 To **enable network access (LiDAR over Ethernet) and serial communication (VESC via `/dev/ttyUSB0`)**, use:
 
@@ -24,7 +24,7 @@ docker run -it --rm --net=host --privileged --device=/dev/tty* f1tenth_foxy
 ```
 
 
-## ** Step 3: Verify Installed Packages**
+##  Step 3: Install the stack
 Follow steps on: https://f1tenth.readthedocs.io/en/foxy_test/getting_started/firmware/drive_workspace.html
 
 To open another terminal in the same window, run
@@ -36,9 +36,9 @@ Find the container id by running
 sudo docker ps
 ```
 
-## **Debugging**
-### ** No LiDAR Data?**
-- Ensure the **LiDAR IP is reachable**:
+## Debugging
+### No LiDAR Data?
+- Ensure the LiDAR IP is reachable:
   ```bash
   ping 192.168.0.15  # Replace with your LiDAR's IP
   ```
@@ -57,13 +57,3 @@ sudo docker ps
   ls /dev/ttyUSB*
   ```
 - If missing, restart the container with correct **`--device=/dev/ttyUSBX`**.
-
-## ** Notes**
-1. The **container is stateless** (`--rm` removes it after exit). If you need persistent data, use:
-   ```bash
-   docker run -it --net=host --privileged --device=/dev/ttyUSB0 -v ~/f1tenth_ws:/root/f1tenth_ws f1tenth_foxy
-   ```
-2. If modifying the `Dockerfile`, **rebuild**:
-   ```bash
-   docker build -t f1tenth_foxy .
-   ```
