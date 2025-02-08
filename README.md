@@ -1,10 +1,6 @@
-# F1Tenth-docker
-
-First, cd into the directory
-
 # **F1TENTH ROS 2 Foxy Docker Setup Guide**
 
-## **Step 1: Build the Docker Image**
+## **Step 1: Build the Docker Image and enable X11 forwarding**
 1. Open a terminal and navigate to your workspace:
    ```bash
    cd ~/f1tenth_ws
@@ -12,6 +8,7 @@ First, cd into the directory
 2. Ensure the **Dockerfile** is in the correct directory (`f1tenth_ws`).
 3. Run the following command to build the Docker image:
    ```bash
+   xhost +local:root
    docker build -t f1tenth_foxy .
    ```
 
@@ -32,6 +29,14 @@ docker run -it --rm --net=host --privileged --device=/dev/tty* f1tenth_foxy
 ## ** Step 3: Verify Installed Packages**
 Follow steps on: https://f1tenth.readthedocs.io/en/foxy_test/getting_started/firmware/drive_workspace.html
 
+To open another terminal in the same window, run
+```bash
+docker exec -it <container_id> /bin/bash
+```
+Find the container id by running 
+```bash
+sudo docker ps
+```
 
 ## **Debugging**
 ### ** No LiDAR Data?**
