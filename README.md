@@ -40,7 +40,7 @@ sudo docker ps
 ### ** No LiDAR Data?**
 - Ensure the **LiDAR IP is reachable**:
   ```bash
-  ping 192.168.0.10  # Replace with your LiDAR's IP
+  ping 192.168.0.15  # Replace with your LiDAR's IP
   ```
 - Modify `urg_node` configuration:
   ```yaml
