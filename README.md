@@ -36,20 +36,6 @@ Find the container id by running
 sudo docker ps
 ```
 
-## Debugging
-### No LiDAR Data?
-- Ensure the LiDAR IP is reachable:
-  ```bash
-  ping 192.168.0.15  # Replace with your LiDAR's IP
-  ```
-- Modify `urg_node` configuration:
-  ```yaml
-  urg_node:
-    ros__parameters:
-      ip_address: "192.168.0.10"
-      serial_port: ""
-      serial_baud: 0
-  ```
 
 ### **VESC Not Detected?**
 - Ensure your device is listed:
