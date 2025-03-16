@@ -1,56 +1,41 @@
-# Use the official ROS 2 Foxy base image
-FROM ros:foxy-ros-base
+# Use the F1Tenth stack base image
+FROM f1tenth/focal-l4t-foxy:f1tenth-stack
 
 # Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
+    
+# Download and install libffi (fixes joystick driver issues)
+WORKDIR /tmp
+RUN wget https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz && \
+    tar -xzf libffi-3.4.4.tar.gz && \
+    cd libffi-3.4.4 && \
+    ./configure && \
+    make && \
+    make install && \
+    ldconfig && \
+    rm -rf /tmp/libffi-3.4.4 /tmp/libffi-3.4.4.tar.gz
 
-# Update package list and install required ROS 2 packages
-RUN apt-get update && apt-get install -y \
-    ros-foxy-ackermann-msgs \
-    ros-foxy-diagnostic-updater \
-    ros-foxy-serial-driver \
-    ros-foxy-rosbridge-server \
-    ros-foxy-test-msgs \
-    ros-foxy-control-msgs \
-    ros-foxy-joy \
-    ros-foxy-joy-teleop \
-    ros-foxy-urg-node \
-    ros-foxy-action-tutorials-interfaces \
-    iputils-ping \
-    net-tools \
-    && rm -rf /var/lib/apt/lists/*
-    
- # Install rviz2 for visualization
-RUN apt-get update && apt-get install -y \
-    ros-foxy-rviz2 \
-    ros-foxy-rviz-common \
-    && rm -rf /var/lib/apt/lists/*
-    
-# Install GUI dependencies for RViz2
-RUN apt-get update && apt-get install -y \
-    ros-foxy-rviz2 \
-    ros-foxy-rviz-common \
-    libxcb-xinerama0 \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-keysyms1 \
-    libxcb-render-util0 \
-    x11-apps \
-    && rm -rf /var/lib/apt/lists/*
-    
 # Enable universe repo and install dependencies
+# Download drivers to enable X11 and rviz support through the container
+WORKDIR /root
 RUN apt-get update && apt-get install -y \
     software-properties-common \
     && add-apt-repository universe \
     && apt-get update \
     && apt-get install -y python3-tk tk \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    mesa-utils libgl1-mesa-glx libgl1-mesa-dri && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set up the ROS 2 workspace
-WORKDIR /root/f1tenth_ws
+WORKDIR /root/f1tenth_ws/
+RUN /bin/bash -c source /opt/ros/foxy/setup.bash && \
+    source /f1tenth_ws/install/setup.bash && \
+    your_command_here
 
-# Source the ROS 2 setup script automatically
-RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
+# Create the new autonomous node and copy the prewritten python script
+RUN ros2 pkg create --build-type ament_python autonomous_car
+COPY autonomous_car.py /root/ros2_ws/src/autonomous_car/autonomous_car/autonomous_car.py
 
 # Set entrypoint
 ENTRYPOINT ["/bin/bash"]
