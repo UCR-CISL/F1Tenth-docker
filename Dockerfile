@@ -31,9 +31,8 @@ RUN wget https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.
 
 # Set up the ROS 2 workspace
 WORKDIR /root/f1tenth_ws/
-RUN /bin/bash -c source /opt/ros/foxy/setup.bash && \
-    source /f1tenth_ws/install/setup.bash && \
-    your_command_here
+RUN source /opt/ros/foxy/setup.bash \
+    source /f1tenth_ws/install/setup.bash
 
 # Create the new autonomous node and copy the prewritten python script
 RUN ros2 pkg create --build-type ament_python autonomous_car
