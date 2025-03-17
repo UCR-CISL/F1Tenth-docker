@@ -6,6 +6,10 @@ ENV DEBIAN_FRONTEND=noninteractive
     
 # Download and install libffi (fixes joystick driver issues)
 WORKDIR /tmp
+
+RUN sudo apt update
+RUN sudo apt install -y build-essential autoconf automake libtool wget
+
 RUN wget https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz && \
     tar -xzf libffi-3.4.4.tar.gz && \
     cd libffi-3.4.4 && \
